@@ -1,4 +1,5 @@
 local lo = require("hyprland.modules.layout")
+local focus = require("hyprland.modules.focus").focus
 local bind_dwindle = lo.bind_dwindle
 local bind_scrolling = lo.bind_scrolling
 local cycle_layout = lo.cycle_layout
@@ -50,30 +51,39 @@ hl.bind("SUPER + SHIFT + Y", hl.dsp.exec_cmd("swaync-client -t"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + F", hl.dsp.window.fullscreen())
-hl.bind("SUPER + H", hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + J", hl.dsp.focus({ direction = "down" }))
-hl.bind("SUPER + K", hl.dsp.focus({ direction = "up" }))
-hl.bind("SUPER + L", hl.dsp.focus({ direction = "right" }))
-hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
-hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
-hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
-hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
+
+hl.bind("SUPER + H", focus("left"))
+hl.bind("SUPER + J", focus("down"))
+hl.bind("SUPER + K", focus("up"))
+hl.bind("SUPER + L", focus("right"))
+hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
+hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
+hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
+hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "right", group_aware = true }))
 hl.bind("SUPER + MINUS", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
 hl.bind("SUPER + EQUAL", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
 hl.bind("SUPER + " .. knobD, hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
 hl.bind("SUPER + " .. knobU, hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
 hl.bind("SUPER + SHIFT + MINUS", hl.dsp.window.resize({ x = -100, y = 0, relative = true }), { repeating = true })
 hl.bind("SUPER + SHIFT + EQUAL", hl.dsp.window.resize({ x = 100, y = 0, relative = true }), { repeating = true })
-hl.bind("SUPER + CONTROL + MINUS", hl.dsp.window.resize({ x = 0, y = 20, relative = true }), { repeating = true })
-hl.bind("SUPER + CONTROL + EQUAL", hl.dsp.window.resize({ x = 0, y = -20, relative = true }), { repeating = true })
-hl.bind("SUPER + CONTROL + " .. knobU, hl.dsp.window.resize({ x = 0, y = 20, relative = true }), { repeating = true })
-hl.bind("SUPER + CONTROL + " .. knobD, hl.dsp.window.resize({ x = 0, y = -20, relative = true }), { repeating = true })
+hl.bind("SUPER + CTRL + MINUS", hl.dsp.window.resize({ x = 0, y = 20, relative = true }), { repeating = true })
+hl.bind("SUPER + CTRL + EQUAL", hl.dsp.window.resize({ x = 0, y = -20, relative = true }), { repeating = true })
+hl.bind("SUPER + CTRL + " .. knobU, hl.dsp.window.resize({ x = 0, y = 20, relative = true }), { repeating = true })
+hl.bind("SUPER + CTRL + " .. knobD, hl.dsp.window.resize({ x = 0, y = -20, relative = true }), { repeating = true })
 
 for i = 1, 10 do
 	local key = i % 10 -- 10 maps to key 0
 	hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = i }))
 	hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
+
+-- GROUPBAR --
+hl.bind("SUPER + G", hl.dsp.group.toggle())
+hl.bind("SUPER + CTRL + G", hl.dsp.group.lock_active())
+hl.bind("SUPER + CTRL + H", hl.dsp.group.prev())
+hl.bind("SUPER + CTRL + L", hl.dsp.group.next())
+hl.bind("SUPER + CTRL + SHIFT + H", hl.dsp.group.move_window({ forward = false }))
+hl.bind("SUPER + CTRL + SHIFT + L", hl.dsp.group.move_window({ forward = true }))
 
 -- LAYOUT --
 hl.bind("SUPER + SLASH", cycle_layout())

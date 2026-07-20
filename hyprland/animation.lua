@@ -20,7 +20,7 @@ am.define_animations({
 	{ leaf = "global", enabled = true, curve = "default", speed = 10 },
 	{ leaf = "fade", enabled = true, curve = "almostLinear", speed = 3.03 },
 
-	{ leaf = "windows", enabled = true, curve = "easeOutCubic", speed = 3, style = popin_pct(window_popin_pct) },
+	{ leaf = "windows", enabled = true, curve = "easeOutCubic", speed = 3.5, style = popin_pct(window_popin_pct) },
 	{ leaf = "fadeIn", enabled = true, curve = "almostLinear", speed = 2 },
 	{ leaf = "fadeOut", enabled = true, curve = "almostLinear", speed = 2 },
 
@@ -35,4 +35,15 @@ am.define_animations({
 
 	{ leaf = "border", enabled = true, curve = "easeOutCubic", speed = 5.39 },
 	{ leaf = "zoomFactor", enabled = true, curve = "almostLinear", speed = 7 },
+
+	-- fadeSwitch disabled so changing active window in groupBar doesn't animate
+	{ leaf = "fadeSwitch", enabled = false, curve = "almostLinear", speed = 3.03 },
 })
+
+-- hl.window_rule({
+-- 	name = "disable-animation-groups",
+-- 	match = {
+-- 		group = true,
+-- 	},
+-- 	no_anim = true,
+-- })
