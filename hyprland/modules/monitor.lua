@@ -67,6 +67,7 @@ local function new(config)
 				workspace = tostring(i),
 				monitor = preferred_monitor,
 				persistent = true,
+				default = i == 1,
 			})
 		end
 	end
@@ -102,9 +103,25 @@ local function new(config)
 
 	local last_state = current_state()
 
+	-- When the lid is shut the laptop panel is parked offscreen, so focus must never
+	-- rest on it. Hyprland doesn't move focus back off a still-enabled monitor when
+	-- the external reconnects, so correct it ourselves.
+	local function ensure_focus(open, has_external)
+		if open or not has_external then
+			return
+		end
+
+		local active = hl.get_active_monitor()
+		if active and active.name ~= config.external.output then
+			hl.dispatch(hl.dsp.focus({ monitor = config.external.output }))
+		end
+	end
+
 	local function handle_monitor_change()
 		local open = lid_open()
 		local has_external = has_external_monitor()
+
+		ensure_focus(open, has_external)
 
 		if open == last_state.open and has_external == last_state.has_external then
 			return
@@ -116,7 +133,6 @@ local function new(config)
 		set_monitors()
 
 		if external_changed then
-			hl.dispatch(hl.dsp.focus({ workspace = 1 }))
 			hl.dispatch(hl.dsp.exec_cmd("systemctl --user restart waybar.service"))
 		end
 	end
