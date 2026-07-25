@@ -37,6 +37,7 @@ hl.bind("CTRL + SHIFT + SPACE", hl.dsp.exec_cmd("1password --quick-access")) -- 
 
 -- UTILITIES --
 hl.bind("SUPER + COMMA", hl.dsp.exec_cmd(noct("settings toggle")))
+hl.bind("SUPER + SHIFT + COMMA", hl.dsp.exec_cmd(open_in_term("nvim ~/.config/hypr/hyprland/binds.lua")))
 hl.bind("SUPER + P", hl.dsp.exec_cmd(noct("bar toggle")))
 hl.bind("CTRL + SHIFT + 3", hl.dsp.exec_cmd("grim - | swappy -f -")) -- full screenshot
 hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f -'))
