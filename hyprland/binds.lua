@@ -1,3 +1,4 @@
+local noctalia = require("hyprland.modules.noctalia")
 local lo = require("hyprland.modules.layout")
 local focus = require("hyprland.modules.focus").focus
 local bind_dwindle = lo.bind_dwindle
@@ -6,14 +7,13 @@ local cycle_layout = lo.cycle_layout
 
 local knobD = "XF86AudioLowerVolume"
 local knobU = "XF86AudioRaiseVolume"
-local function noct(cmd) return "qs -c noctalia-shell ipc call " .. cmd end
 local function uwsm(app) return "uwsm-app -- " .. app end
 local function open_in_term(cmd) return "uwsm-app -- ghostty -e " .. cmd end
 
 -- SYSTEM
 hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind("CTRL + ALT + L", hl.dsp.exec_cmd("loginctl lock-session"))
-hl.bind("SUPER + SHIFT + N", hl.dsp.exec_cmd("pkill qs || qs -c 'noctalia-shell'"))
+hl.bind("SUPER + SHIFT + N", noctalia.toggle_shell())
 
 -- MOUSE BINDS --
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
@@ -23,30 +23,32 @@ hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e+1" }))
 
 -- APPS --
 local terminal = uwsm("ghostty")
-local files = open_in_term("yazi")
-local default_browser = "firefox"
-local alt_browser = "google-chrome-stable"
+local files = uwsm("nautilus")
+local default_browser = uwsm("firefox")
+local alt_browser = uwsm("google-chrome-stable")
 
 hl.bind("SUPER + RETURN", hl.dsp.exec_cmd(terminal))
-hl.bind("SUPER + B", hl.dsp.exec_cmd(uwsm(default_browser)))
-hl.bind("SUPER + SHIFT + B", hl.dsp.exec_cmd(uwsm(alt_browser)))
+hl.bind("SUPER + B", hl.dsp.exec_cmd(default_browser))
+hl.bind("SUPER + SHIFT + B", hl.dsp.exec_cmd(alt_browser))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(files))
+hl.bind("SUPER + Y", hl.dsp.exec_cmd(open_in_term("yazi")))
 hl.bind("SUPER + A", hl.dsp.exec_cmd("claude-desktop"))
 hl.bind("SUPER + N", hl.dsp.exec_cmd(uwsm("notion-app")))
 hl.bind("CTRL + SHIFT + SPACE", hl.dsp.exec_cmd("1password --quick-access")) -- hyprctl reload to fix if not working
 
 -- UTILITIES --
-hl.bind("SUPER + COMMA", hl.dsp.exec_cmd(noct("settings toggle")))
+hl.bind("SUPER + COMMA", noctalia.settings())
 hl.bind("SUPER + SHIFT + COMMA", hl.dsp.exec_cmd(open_in_term("nvim ~/.config/hypr/hyprland/binds.lua")))
-hl.bind("SUPER + P", hl.dsp.exec_cmd(noct("bar toggle")))
-hl.bind("CTRL + SHIFT + 3", hl.dsp.exec_cmd("grim - | swappy -f -")) -- full screenshot
-hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f -'))
+hl.bind("SUPER + P", noctalia.bar_toggle())
+hl.bind("SUPER + D", noctalia.dock_toggle())
+hl.bind("CTRL + SHIFT + 3", noctalia.screenshot_fullscreen())
+hl.bind("CTRL + SHIFT + 4", noctalia.screenshot_region())
 
 -- MENUS / OVERLAYS
-hl.bind("CTRL + SPACE", hl.dsp.exec_cmd(noct("launcher toggle")))
-hl.bind("SUPER + SHIFT + P", hl.dsp.exec_cmd(noct("sessionMenu toggle")))
-hl.bind("SUPER + C", hl.dsp.exec_cmd(noct("launcher clipboard")))
-hl.bind("SUPER + SHIFT + Y", hl.dsp.exec_cmd("swaync-client -t"))
+hl.bind("CTRL + SPACE", noctalia.launcher())
+hl.bind("SUPER + SHIFT + P", noctalia.session_menu())
+hl.bind("SUPER + C", noctalia.clipboard())
+hl.bind("ALT + TAB", noctalia.window_switcher())
 
 -- TILING / WORKSPACES --
 hl.bind("SUPER + Q", hl.dsp.window.close())
@@ -104,12 +106,12 @@ hl.bind("SUPER + S", hl.dsp.workspace.toggle_special("S"))
 hl.bind("SUPER + SHIFT + S", hl.dsp.window.move({ workspace = "special:S" }))
 
 -- MULTIMEDIA KEYS --
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(noct("brightness increase")), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(noct("brightness decrease")), { locked = true, repeating = true })
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd(noct("media next")), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd(noct("media playPause")), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(noct("media playPause")), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("media previous"))
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(noct("volume increase")), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(noct("volume decrease")), { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd(noct("volume muteOutput")), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp", noctalia.brightness_up(), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", noctalia.brightness_down(), { locked = true, repeating = true })
+hl.bind("XF86AudioNext", noctalia.media_next(), { locked = true })
+hl.bind("XF86AudioPause", noctalia.media_play_pause(), { locked = true })
+hl.bind("XF86AudioPlay", noctalia.media_play_pause(), { locked = true })
+hl.bind("XF86AudioPrev", noctalia.media_prev())
+hl.bind("XF86AudioRaiseVolume", noctalia.volume_up(), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", noctalia.volume_down(), { locked = true, repeating = true })
+hl.bind("XF86AudioMute", noctalia.volume_mute(), { locked = true, repeating = true })

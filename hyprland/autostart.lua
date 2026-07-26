@@ -1,1 +1,2 @@
-hl.on("hyprland.start", function() hl.exec_cmd("qs -c 'noctalia-shell'") end)
+local noctalia = require("hyprland.modules.noctalia")
+hl.on("hyprland.start", function() noctalia.start_shell() end)
