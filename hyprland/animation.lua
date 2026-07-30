@@ -39,11 +39,3 @@ am.define_animations({
 	-- fadeSwitch disabled so changing active window in groupBar doesn't animate
 	{ leaf = "fadeSwitch", enabled = false, curve = "almostLinear", speed = 3.03 },
 })
-
--- hl.window_rule({
--- 	name = "disable-animation-groups",
--- 	match = {
--- 		group = true,
--- 	},
--- 	no_anim = true,
--- })
